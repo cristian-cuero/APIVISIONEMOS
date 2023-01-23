@@ -1,0 +1,22 @@
+# APIVISIONEMOS
+
+Este Archivo Da La Informacion De Como Esta Configurdo El Servicio
+
+----------------------------------------------------------------------------------------------------
+# controller 
+Es la carpeta donde se encuenta el controlador CierreContable.js el cual es el encargado de consular los pagos , y generar el json valido  para 
+posteriormente ser enviado a visionemos
+
+# db
+es la carptea de la configuracion  de la conexion a la BD. Esta el archivo DBConection.js El cual esta todo lo neceario para la consulta a la BD Y tambien la funcion
+CONSULTA la cual es encargada  de realizar las difrentes interacciones con la BD select , insert , update entre otras
+
+# helper 
+es la carpeta de funciones axuliares para los controladores
+cifrado: este archivo estan todas las funciones necesarias para encryptar informacion
+envioData: este archivo contiene todas las funciones necesarias para el envio  de la informacion a visionemos
+LoginController: este archivo contiene la logica  para obtener credenciales a visionemos
+Logs: crear el logs de registros
+-----------------------------------------------------------------------------
+#App.js
+El arhivo que inicia la ejecucion del programa

@@ -1,9 +1,9 @@
 const Firebird = require('node-firebird');
 var options = {};
 
-options.host = '181.143.125.162';
+options.host = 'Localhost';
 options.port = 3051;
-options.database = 'BDPISCO';
+options.database = "D:\\BD_CLIENTES\\MedellinAccionDeAmar\\BDPISCO.FDB";
 options.user = 'SYSDBA';
 options.password = 'masterkey';
 options.lowercase_keys = false; // set to true to lowercase keys
@@ -23,15 +23,20 @@ const consulta  = async ( sql = "", parametor = []) => {
                 reject(err);
         
             // db = DATABASE
-            db.query(sql,parametor,function(err, result) {
+            try {
+                db.query(sql,parametor,function(err, result) {
                 
-                if(err){
-                    reject(err);
-                }
-                resolve(result)
-                //console.log(result);
-                db.detach();
-            });
+                    if(err){
+                        reject(err);
+                    }
+                    resolve(result)
+                    //console.log(result);
+                    db.detach();
+                });
+            } catch (error) {
+                
+            }
+          
         
         });
 

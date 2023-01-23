@@ -14,15 +14,15 @@ const { Logs } = require("../helper/Logs");
 class Server {
   //constructor
   constructor() {
-    this.app = express()
-    this.port = process.env.puerto
+    //this.app = express()
+    //this.port = process.env.puerto
 
     //paths de rutas
-    this.paths = {
-      usuarios: "/api/users",
-    };
+   // this.paths = {
+     // usuarios: "/api/users",
+   // };
 
-    this.middleware();
+    //this.middleware();
     //rutas de la aplicacion
     // this.routes();
      this.conectarDD();
@@ -30,9 +30,8 @@ class Server {
 
   //para que escuche la aplicacion
   listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Backend corriendo en http://localhost:${this.port}`);
-    });
+    
+      console.log(`Backend corriendo en http://localhost De Manera Satisfactoria`);
   }
 
 
@@ -55,7 +54,7 @@ class Server {
         console.log("INICIO")
         await Promise.all([
           CierreContable(),
-          this.timeout(60000)
+          this.timeout(30000)
       ]);
       
     
@@ -84,25 +83,7 @@ class Server {
   timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
- 
-  //middlewares de mi app
-  middleware() {
-    // uso de cors
-    this.app.use(cors());
-    //lectura y pareson de json
-    this.app.use(express.json());
-    //use rutas estaticas;
-    //directorio publico siempre llama el index para el get / solo 
-    this.app.use(express.static('public'))
-    //acepta archiva desde peticiones rest es una configuracion
-    // this.app.use(
-    //   fileUpload({
-    //     useTempFiles: true,
-    //     tempFileDir: "/tmp/",
-    //     createParentPath: true, //mucho cuidado que esto crea carpeta donde sea
-    //   })
-    // );
-  }
+
 
   //importar Rutas
 

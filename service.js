@@ -2,12 +2,12 @@ var Service = require('node-windows').Service;
 
 // Create a new service object
 var svc = new Service({
-  name:'CuentaServicio',
-  description: 'The nodejs.org example web server.',
-  script: 'C:\\APIVISIONEMOS\\app.js',
+  name:'Pisco-ServicioContable',
+  description: 'Servicio Contable De Pagos De Aplicativo Pisco a Plataforma De Visionamos',
+  script: './app.js',
   nodeOptions: [
     '--harmony',
-    '--max_old_space_size=4096'
+    '--max_old_space_size=6144'
   ]
   //, workingDirectory: '...'
   //, allowServiceLogon: true

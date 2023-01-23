@@ -17,10 +17,10 @@ const CierreContable = async () => {
   //!se realiza la consulta  de los pagos que estan sin sincroniozar en la BD Y Se Crea La Estructura
   //? variable que arma la sentencia "sql"
   let sql =
-    "select    p.norecibo , p.fecha , p.fechanow ,  substring(p.detalle from 1 for 50) detalle, p.valor ValorDebito , fo.fondo ,fo.nrocuenta , fo.tipo,  f.valor ValorCuenta,";
+    "select    p.norecibo , p.fecha , p.fechanow ,  substring(p.detalle from 1 for 50) detalle, p.valor ValorDebito ,  iif((b.cuenta = '' or b.cuenta is null)  , pc.cuentapuente, b.cuenta) CuentaPuente , fo.fondo ,fo.nrocuenta , fo.tipo,  f.valor ValorCuenta, ";
   sql =
     sql +
-    " iif( f.idfondo = 5 , iif(substring(p.idcobrador from 1 for char_length(p.idcobrador) -1) = 1 , '811031526',substring(p.idcobrador from 1 for char_length(p.idcobrador) -1)),  substring(pt.idpersona from 1 for char_length(pt.idpersona) -1))  Cliente , s.idagencia ";
+    " iif( f.idfondo = 5 , iif(substring(p.idcobrador from 1 for char_length(p.idcobrador) -1) = 1 , '811031526',substring(p.idcobrador from 1 for char_length(p.idcobrador) -1)),  substring(pt.idpersona from 1 for char_length(pt.idpersona) -1))  Cliente , s.idagencia,  p.usuario ";
   sql =
     sql +
     " from tblpagos p inner join tblpagosdetallefondo f on p.norecibo = f.norecibo ";
@@ -29,7 +29,7 @@ const CierreContable = async () => {
     " inner join tblfondos fo on f.idfondo = fo.idfondo inner join tblcontrato c on p.idcontrato = c.idcontrato  inner join tblzonas s on c.id = s.id ";
   sql =
     sql +
-    " inner join tblpersona pt on c.idpersona = pt.idpersona where p.fecha = ? and  p.SINCRONIZADOCONTABLE = 0 and p.anulado = 0   order by p.norecibo ";
+    " inner join tblpersona pt on c.idpersona = pt.idpersona inner join tblparametoscontables pc on pc.id = 1 inner join tblpagosdetalle pgd on p.norecibo =  pgd.norecibo left  join tblbancos b on pgd.idbanco  = b.codigo where p.fecha >= ? and  p.SINCRONIZADOCONTABLE = 0 and p.anulado = 0   order by p.norecibo ";
 
   //?parametos para mi select el where "PARAMETRO"
   let parametros = [];
@@ -75,12 +75,12 @@ const CierreContable = async () => {
           Moviemiento.hour = moment(element.FECHANOW).format("YYYY-MM-DD HH:MM");
           Moviemiento.channel = "VISIONEMOS";
           Moviemiento.ip = ip.address();
-          Moviemiento.user = "PISCO";
+          Moviemiento.user = element.USUARIO;
           Moviemiento.idAccountingVoucher = "03";
   
           //debito
           let cuenta = new Cuenta(
-            "11050501",
+            element.CUENTAPUENTE,
             element.CLIENTE,
             element.DETALLE + ' MOVIMIENTO PISCO' ,
              element.VALORDEBITO,

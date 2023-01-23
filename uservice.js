@@ -3,7 +3,7 @@ var Service = require('node-windows').Service;
 // Create a new service object
 var svc = new Service({
   name:'CuentaServicio',
-  script: 'C:\\APIVISIONEMOS\\app.js',
+  script: './app.js',
 });
 
 // Listen for the "uninstall" event so we know when it's done.
