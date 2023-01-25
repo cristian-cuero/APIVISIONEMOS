@@ -17,7 +17,7 @@ const CierreContable = async () => {
   //!se realiza la consulta  de los pagos que estan sin sincroniozar en la BD Y Se Crea La Estructura
   //? variable que arma la sentencia "sql"
   let sql =
-    "select    p.norecibo , p.fecha , p.fechanow ,  substring(p.detalle from 1 for 50) detalle, p.valor ValorDebito ,  iif((b.cuenta = '' or b.cuenta is null)  , pc.cuentapuente, b.cuenta) CuentaPuente , fo.fondo ,fo.nrocuenta , fo.tipo,  f.valor ValorCuenta, ";
+    "select    p.norecibo , p.fecha , p.fechanow ,  substring(p.detalle from 1 for 50) detalle, p.valor ValorDebito ,  iif((b.cuenta = '' or b.cuenta is null)  , pc.cuentapuente, b.cuenta) CuentaPuente , fo.fondo ,fo.nrocuenta , fo.tipo,  f.valor ValorCuenta, substring(pt.idpersona from 1 for char_length(pt.idpersona) -1)  ClientePago, ";
   sql =
     sql +
     " iif( f.idfondo = 5 , iif(substring(p.idcobrador from 1 for char_length(p.idcobrador) -1) = 1 , '811031526',substring(p.idcobrador from 1 for char_length(p.idcobrador) -1)),  substring(pt.idpersona from 1 for char_length(pt.idpersona) -1))  Cliente , s.idagencia,  p.usuario ";
@@ -81,7 +81,7 @@ const CierreContable = async () => {
           //debito
           let cuenta = new Cuenta(
             element.CUENTAPUENTE,
-            element.CLIENTE,
+            element.CLIENTEPAGO,
             element.DETALLE + ' MOVIMIENTO PISCO' ,
              element.VALORDEBITO,
              '0',

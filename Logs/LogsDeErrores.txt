@@ -59158,4 +59158,32 @@
   ******** Se Presento El Siguiente Error   
   ******** Inicio De Servicio El Dia: 2023-01-23 12:51 De Manera De Correcta ******** 
   En La Fecha: 2023-01-23 12:51  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-23 14:52 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-23 14:52  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-23 15:12 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-23 15:12  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-25 10:25 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-25 10:25  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-25 10:26 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-25 10:26  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-25 10:26 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-25 10:26  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-25 10:36 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-25 10:36  ******** 
+  
+  ******** Se Presento El Siguiente Error   
+  ******** Inicio De Servicio El Dia: 2023-01-25 10:40 De Manera De Correcta ******** 
+  En La Fecha: 2023-01-25 10:40  ******** 
  
