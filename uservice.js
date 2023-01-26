@@ -2,7 +2,7 @@ var Service = require('node-windows').Service;
 
 // Create a new service object
 var svc = new Service({
-  name:'CuentaServicio',
+  name:'Pisco-ServicioContable',
   script: './app.js',
 });
 
