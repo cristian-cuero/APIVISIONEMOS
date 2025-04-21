@@ -1,4 +1,3 @@
-
 const consulta = require("../db/DBConection");
 const moment = require("moment");
 const Cuenta = require("../model/Cuenta");
@@ -16,104 +15,88 @@ const CierreContable = async () => {
 
   //!se realiza la consulta  de los pagos que estan sin sincroniozar en la BD Y Se Crea La Estructura
   //? variable que arma la sentencia "sql"
-  let sql =
-    "select    p.norecibo , p.fecha , p.fechanow ,  substring(p.detalle from 1 for 50) detalle, p.valor ValorDebito ,  iif((b.cuenta = '' or b.cuenta is null)  , pc.cuentapuente, b.cuenta) CuentaPuente , fo.fondo ,fo.nrocuenta , fo.tipo,  f.valor ValorCuenta, iif( b.cuenta <> ''  or b.cuenta is not null  , substring(pt.idpersona from 1 for char_length(pt.idpersona) -1), '811031526')  ClientePago , ";
-  sql =
-    sql +
-    " iif( f.idfondo = 5 , iif(substring(p.idcobrador from 1 for char_length(p.idcobrador) -1) = 1 , '811031526',substring(p.idcobrador from 1 for char_length(p.idcobrador) -1)),  substring(pt.idpersona from 1 for char_length(pt.idpersona) -1))  Cliente , s.idagencia,  p.usuario ";
-  sql =
-    sql +
-    " from tblpagos p inner join tblpagosdetallefondo f on p.norecibo = f.norecibo ";
-  sql =
-    sql +
-    " inner join tblfondos fo on f.idfondo = fo.idfondo inner join tblcontrato c on p.idcontrato = c.idcontrato  inner join tblzonas s on c.id = s.id ";
-  sql =
-    sql +
-    " inner join tblpersona pt on c.idpersona = pt.idpersona inner join tblparametoscontables pc on pc.id = 1 inner join tblpagosdetalle pgd on p.norecibo =  pgd.norecibo left  join tblbancos b on pgd.idbanco  = b.codigo where p.fecha >= ? and  p.SINCRONIZADOCONTABLE = 0 and p.anulado = 0   order by p.norecibo ";
-
-  //?parametos para mi select el where "PARAMETRO"
-  let parametros = [];
-  parametros.push(moment(new Date(process.env.date)).format("YYYY-MM-DD"));
+  let sql = "select *  from P_CONSULTAPAGOSVISIONAMOS ";
 
   //**realizamos la consulta (Consulta es una funcion que recibe un string y un arreglo de condiciones del where)
-  const pagos = await consulta(sql, parametros);
+  const pagos = await consulta(sql, []);
 
   //? crea un objeto JSON con los debitos y creditos del pago tal  y como lo solicita visionemos  Ver El README
   let Moviemiento = {};
 
   //? variable donde se guardan las cuentas del  moviemito
   let CuentasMovimitos = [];
-  
+
   let Recibo = "";
+  let clientesID = "";
 
+  let notificar = "";
+  let i = 0;
 
-  let i = 0
   //**Se Realiza  Un Ciclo de los pagos Y Arma El Objeto JSON el foreach No Acepta El Await En Los Ciclos
-   for (const element of pagos){ 
-   
+  for (const element of pagos) {
     //**Si Hay Varios Pagos
-    if (element.NORECIBO != Recibo ) {
-      
-        if (Object.keys(Moviemiento).length != 0 )  {
-          Moviemiento.accountingMovementDTO = CuentasMovimitos;
-        
-          
-          //CuentasMovimitos = [Moviemiento];
-          //console.log("Moviemiento :>> ", Moviemiento);
-          const data =  encryptAES256(JSON.stringify(Moviemiento));
-          const key =  Base64Encrypt();
-          // console.log(Moviemiento)
-          CuentasMovimitos = [];
-          Moviemiento = {};
-          const p = await  EnvioData(Recibo, data , key )
-          console.log(Recibo)
-          //encrypt();
-          
-        }
+    if (element.NORECIBO != Recibo) {
+      if (Object.keys(Moviemiento).length != 0) {
+        Moviemiento.accountingMovementDTO = CuentasMovimitos;
 
-          Moviemiento.date = moment(element.FECHA).format("YYYY-MM-DD");
-          Moviemiento.hour = moment(element.FECHANOW).format("YYYY-MM-DD HH:MM");
-          Moviemiento.channel = "VISIONEMOS";
-          Moviemiento.ip = ip.address();
-          Moviemiento.user = element.USUARIO;
-          Moviemiento.idAccountingVoucher = "03";
-  
-          //debito
-          let cuenta = new Cuenta(
-            element.CUENTAPUENTE,
-            element.CLIENTEPAGO,
-            element.DETALLE + ' MOVIMIENTO PISCO' ,
-             element.VALORDEBITO,
-             '0',
-            element.NORECIBO,
-            element.IDAGENCIA
-          );
-          let texto = JSON.stringify(cuenta);
-          let objeto = JSON.parse(texto);
-          CuentasMovimitos.push(objeto);
-          //credito
-          cuenta = new Cuenta(
-            element.NROCUENTA,
-            element.CLIENTE,
-            element.DETALLE +'MOVIMIENTO PISCO' ,
-            "0",
-            String(element.VALORCUENTA),
-            element.NORECIBO,
-            element.IDAGENCIA
-          );
-          texto = JSON.stringify(cuenta);
-          objeto = JSON.parse(texto);
-          CuentasMovimitos.push(objeto);
-        
-       
-      
+        //CuentasMovimitos = [Moviemiento];
+        //console.log("Moviemiento :>> ", Moviemiento);
+        const data = encryptAES256(JSON.stringify(Moviemiento));
+        const key = Base64Encrypt();
+        // console.log(Moviemiento)
+        CuentasMovimitos = [];
+        Moviemiento = {};
+        clientesID = "";
+        const p = await EnvioData(Recibo, data, key, notificar, clientesID);
+        //console.log(Recibo);
+        clientesID = "";
+        //encrypt();
+      }
+
+      Moviemiento.date = moment(element.FECHA).format("YYYY-MM-DD");
+      Moviemiento.hour = moment(element.FECHANOW).format("YYYY-MM-DD HH:MM");
+      Moviemiento.channel = "VISIONEMOS";
+      Moviemiento.ip = ip.address();
+      Moviemiento.user = element.USUARIO;
+      Moviemiento.idAccountingVoucher = "03";
+      notificar = element.NOTIFICADO;
+
+      //debito
+      let cuenta = new Cuenta(
+        element.CUENTAPUENTE,
+        element.CLIENTEPAGO,
+        element.DETALLE + " MOVIMIENTO PISCO",
+        element.VALORDEBITO,
+        "0",
+        element.NORECIBO,
+        element.IDAGENCIA
+      );
+      clientesID = clientesID + " " + element.CLIENTEPAGO;
+      let texto = JSON.stringify(cuenta);
+      let objeto = JSON.parse(texto);
+      CuentasMovimitos.push(objeto);
+      //credito
+      cuenta = new Cuenta(
+        element.NROCUENTA,
+        element.CLIENTE,
+        element.DETALLE + " MOVIMIENTO PISCO",
+        "0",
+        String(element.VALORCUENTA),
+        element.NORECIBO,
+        element.IDAGENCIA
+      );
+      texto = JSON.stringify(cuenta);
+      objeto = JSON.parse(texto);
+      CuentasMovimitos.push(objeto);
+
+      clientesID = clientesID + " " + element.CLIENTE;
     } else {
       //es credito
       if (element.TIPO === 0) {
         const cuenta = new Cuenta(
           element.NROCUENTA,
-          element.CLIENTE ,
-          element.DETALLE + 'MOVIMIENTO PISCO' ,
+          element.CLIENTE,
+          element.DETALLE + " MOVIMIENTO PISCO",
           "0",
           String(element.VALORCUENTA),
           element.NORECIBO,
@@ -122,13 +105,12 @@ const CierreContable = async () => {
         const texto = JSON.stringify(cuenta);
         const objeto = JSON.parse(texto);
         CuentasMovimitos.push(objeto);
-        //console.log(CuentasMovimitos)
       } else {
         //es debito
         const cuenta = new Cuenta(
           element.NROCUENTA,
           element.CLIENTE,
-          element.DETALLE + 'MOVIMIENTO PISCO'  ,
+          element.DETALLE + " MOVIMIENTO PISCO",
           String(element.VALORCUENTA),
           "0",
           element.NORECIBO,
@@ -137,26 +119,32 @@ const CierreContable = async () => {
         const texto = JSON.stringify(cuenta);
         const objeto = JSON.parse(texto);
         CuentasMovimitos.push(objeto);
-        //console.log(CuentasMovimitos)
       }
+      clientesID = clientesID + " " + element.CLIENTE;
     }
+
     Recibo = element.NORECIBO;
-    i++
+
+    i++;
     //*si Hay Uno Solo O Traaer El Ultimo Elemento
-    if((i) === pagos.length ){
+    if (i === pagos.length) {
       Moviemiento.accountingMovementDTO = CuentasMovimitos;
-          //CuentasMovimitos = [Moviemiento];
-        await EnvioData(Recibo , encryptAES256(JSON.stringify(Moviemiento)), Base64Encrypt())
-        console.log(Recibo)
-         //encrypt();
-         CuentasMovimitos = [];
-         Moviemiento = {};
+      //CuentasMovimitos = [Moviemiento];
+      await EnvioData(
+        Recibo,
+        encryptAES256(JSON.stringify(Moviemiento)),
+        Base64Encrypt(),
+        notificar,
+        clientesID
+      );
+      //encrypt();
+      CuentasMovimitos = [];
+      Moviemiento = {};
+      clientesID = "";
     }
-  };
+  }
 
-
-return true
-  
+  return true;
 };
 
 //se proceede a encriptar la informacion

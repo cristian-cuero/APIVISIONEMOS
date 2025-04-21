@@ -45,6 +45,8 @@ class Server {
        process.env.grant_type = data[0].GRANT_TYPE
        process.env.scope = data[0].SCOPE
        process.env.date =   data[0].FECHAINICIO
+       process.env.passwordmail =  data[0].CORREOPASWORD
+       process.env.correosNoti = data[0].CORREONOTIFICA;
        
        //CierreContable();
         //setInterval( async () =>  await CierreContable(), 5000)

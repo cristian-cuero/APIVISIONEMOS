@@ -1,9 +1,12 @@
 const Firebird = require('node-firebird');
 var options = {};
 
-options.host = 'Localhost';
+// options.host = '181.143.125.162';
+// options.port = '3051';
+options.host = '26.242.194.209';
+//options.host = "177.253.202.242";
 options.port = 3051;
-options.database = "D:\\BD_CLIENTES\\MedellinAccionDeAmar\\BDPISCO.FDB";
+options.database = "BDPISCO";
 options.user = 'SYSDBA';
 options.password = 'masterkey';
 options.lowercase_keys = false; // set to true to lowercase keys
